@@ -1214,36 +1214,12 @@
 
 <footer>© 2026 Phrog Photos — All images belong to their respective photographer</footer>
 
-<!-- FAB -->
-<button class="fab" id="fabBtn" title="Add Photo">+</button>
-
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose">×</button>
   <div class="lightbox-content" id="lightboxContent"></div>
 </div>
 
-<!-- UPLOAD MODAL -->
-<div class="upload-modal" id="uploadModal">
-  <div class="upload-box" id="uploadBox">
-    <button class="upload-modal-close" id="uploadClose">×</button>
-    <h3>Add a New Shot</h3>
-    <p>Drag & drop your dive photo or browse to upload</p>
-    <input type="file" id="fileInput" accept="image/*">
-    <label class="upload-browse" for="fileInput">⬆ Browse Files</label>
-    <div class="upload-form-fields" id="uploadFields">
-      <div class="form-group">
-        <label>Title</label>
-        <input type="text" id="photoTitle" placeholder="e.g. Flamboyant Cuttlefish">
-      </div>
-      <div class="form-group">
-        <label>Location</label>
-        <input type="text" id="photoLocation" placeholder="e.g. Anilao, Philippines">
-      </div>
-      <button class="upload-submit" id="uploadSubmit">Add to Gallery</button>
-    </div>
-  </div>
-</div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─── SAMPLE DATA ───
@@ -1358,71 +1334,6 @@ document.getElementById('lightboxClose').onclick = () =>
 document.getElementById('lightbox').addEventListener('click', e => {
   if (e.target === e.currentTarget) document.getElementById('lightbox').classList.remove('active');
 });
-
-// ─── UPLOAD ───
-const fabBtn = document.getElementById('fabBtn');
-const uploadModal = document.getElementById('uploadModal');
-const uploadBox = document.getElementById('uploadBox');
-const fileInput = document.getElementById('fileInput');
-const uploadFields = document.getElementById('uploadFields');
-
-let pendingFile = null;
-
-fabBtn.onclick = () => uploadModal.classList.add('active');
-document.getElementById('uploadClose').onclick = () => {
-  uploadModal.classList.remove('active');
-  uploadFields.classList.remove('active');
-  pendingFile = null;
-};
-
-uploadModal.addEventListener('click', e => {
-  if (e.target === e.currentTarget) {
-    uploadModal.classList.remove('active');
-    uploadFields.classList.remove('active');
-    pendingFile = null;
-  }
-});
-
-uploadBox.addEventListener('dragover', e => { e.preventDefault(); uploadBox.classList.add('dragover'); });
-uploadBox.addEventListener('dragleave', () => uploadBox.classList.remove('dragover'));
-uploadBox.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadBox.classList.remove('dragover');
-  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-});
-
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length) handleFile(fileInput.files[0]);
-});
-
-function handleFile(file) {
-  if (!file.type.startsWith('image/')) return;
-  pendingFile = file;
-  uploadFields.classList.add('active');
-}
-
-document.getElementById('uploadSubmit').onclick = () => {
-  if (!pendingFile) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const newPhoto = {
-      id: Date.now(),
-      title: document.getElementById('photoTitle').value || 'Untitled Dive',
-      location: document.getElementById('photoLocation').value || 'Unknown',
-      camera: 'TG-7 Microscope',
-      dataUrl: e.target.result,
-      colors: ["#1b3a4b","#0d1b2a","#1ed9c0","#e07a5f"]
-    };
-    allPhotos.unshift(newPhoto);
-    renderGallery();
-    uploadModal.classList.remove('active');
-    uploadFields.classList.remove('active');
-    document.getElementById('photoTitle').value = '';
-    document.getElementById('photoLocation').value = '';
-    pendingFile = null;
-  };
-  reader.readAsDataURL(pendingFile);
-};
 
 // ─── BUBBLES (lots of them!) ───
 (function createBubbles() {
@@ -1652,7 +1563,6 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     document.getElementById('lightbox').classList.remove('active');
-    document.getElementById('uploadModal').classList.remove('active');
   }
 });
 
