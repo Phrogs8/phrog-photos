@@ -579,7 +579,7 @@ function renderGallery() {
   grid.innerHTML = allPhotos.map(photo => {
     return `
       <div class="photo-card" data-id="${photo.id}" draggable="true" ondragstart="dragStart(event, ${photo.id})" ondragover="dragOver(event)" ondrop="dropPhoto(event, ${photo.id})" onclick="openLightbox(${photo.id})">
-        <img src="${photo.dataUrl.replace('.jpg', '-lg.jpg')}" srcset="${photo.dataUrl.replace('.jpg', '-sm.jpg')} 400w, ${photo.dataUrl.replace('.jpg', '-md.jpg')} 800w, ${photo.dataUrl.replace('.jpg', '-lg.jpg')} 1200w" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" alt="${photo.title}" loading="lazy">
+        <img src="${photo.dataUrl}" alt="${photo.title}" loading="lazy">
         <div class="photo-overlay">
           <h3>${photo.title}</h3>
           <p>${photo.location}</p>
@@ -620,7 +620,7 @@ function openLightbox(id) {
   const photo = allPhotos.find(p => p.id === id);
   if (!photo) return;
   document.getElementById('lightboxContent').innerHTML = `
-    <img src="${photo.dataUrl.replace('.jpg', '-lg.jpg')}" alt="${photo.title}">
+    <img src="${photo.dataUrl}" alt="${photo.title}">
     <div class="lightbox-info">
       <h3>${photo.title}</h3>
       <p>${photo.location}</p>
